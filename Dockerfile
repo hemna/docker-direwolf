@@ -1,14 +1,14 @@
-FROM debian:buster-slim as base
+FROM debian:bookworm-slim AS base
 RUN apt-get update && apt-get -y dist-upgrade \
  && apt-get install -y \
     rtl-sdr \
     libasound2 \
     libusb-1.0-0 \
-    libhamlib2 \
-    libgps23 \
+    libhamlib4 \
+    libgps28 \
  && rm -rf /var/lib/apt/lists/*
 
-FROM base as builder
+FROM base AS builder
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
@@ -32,12 +32,12 @@ FROM base
 COPY --from=builder /target/usr/local/bin /usr/local/bin
 COPY --from=builder /target/etc/udev/rules.d/99-direwolf-cmedia.rules /etc/udev/rules.d/99-direwolf-cmedia.rules
 
-ENV CALLSIGN "N0CALL"
-ENV PASSCODE "-1"
-ENV IGSERVER "noam.aprs2.net"
-ENV FREQUENCY "144.39M"
-ENV COMMENT "Direwolf in Docker w2bro/direwolf"
-ENV SYMBOL "igate"
+ENV CALLSIGN="N0CALL"
+ENV PASSCODE="-1"
+ENV IGSERVER="noam.aprs2.net"
+ENV FREQUENCY="144.39M"
+ENV COMMENT="Direwolf in Docker w2bro/direwolf"
+ENV SYMBOL="igate"
 
 RUN mkdir -p /etc/direwolf
 RUN mkdir -p /var/log/direwolf
